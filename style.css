@@ -8,8 +8,8 @@
   --palette-yellow-pale: #FFFA8D;
 
   /* Header & Menu */
-  --header-bg-gradient-start: #6DE1D2; /* UPDATED */
-  --header-bg-gradient-end: #FFD63A;   /* UPDATED */
+  --header-bg-gradient-start: #6DE1D2;
+  --header-bg-gradient-end: #FFD63A;
   --logo-text-color: #102E50;
   --menu-text-hover-bg: rgba(0, 0, 0, 0.05);
   --menu-text-hover-color: var(--palette-cyan-bright);
@@ -80,7 +80,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-body.no-scroll { overflow: hidden !important; }
+body.no-scroll { overflow-y: hidden; }
 
 /* Typography */
 h1, h2, h3, h4, h5, h6 {
@@ -150,11 +150,7 @@ header {
   height: 3px; width: 100%; border-radius: 3px; position: absolute;
   transition: all 0.3s ease-in-out;
 }
-.nav-toggle-icon { 
-  top: 50%; 
-  transform: translateY(-50%); 
-  position: relative; /* Ensure correct stacking for hamburger lines */
-}
+.nav-toggle-icon { top: 50%; transform: translateY(-50%); }
 .nav-toggle-icon::before { top: -8px; }
 .nav-toggle-icon::after { bottom: -8px; }
 .nav-toggle[aria-expanded="true"] .nav-toggle-icon { background-color: transparent; }
@@ -173,9 +169,7 @@ header {
   padding: 10px 0; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
   z-index: 999; border-top: 1px solid rgba(255,255,255,0.25);
 }
-.nav-dropdown-menu.show { 
-  display: flex !important; /* Ensure specificity for JS toggle */
-}
+.nav-dropdown-menu.show { display: flex; }
 .nav-dropdown-menu a:not(.menu-book-now-link) {
   color: var(--logo-text-color);
   font-weight: 700;
@@ -203,7 +197,7 @@ header {
 
 /* Sections General */
 section { padding: clamp(50px, 8vw, 90px) clamp(15px, 4vw, 20px); position: relative; }
-section:not(.hero):not(.explore-benefits):not(.footer):not(.contact-details-section) {
+section:not(.hero):not(.explore-benefits):not(.footer):not(.contact-details-section):not(.rooms-page-hero):not(.rooms-page-intro):not(.photo-gallery-section) {
     background-color: var(--bg-section-overlay); border-radius: var(--border-radius-md);
     margin: 0 auto clamp(20px, 4vw, 40px) auto; max-width: 1300px;
     box-shadow: var(--shadow-soft); padding: clamp(30px, 6vw, 60px) clamp(20px, 5vw, 40px);
@@ -293,7 +287,7 @@ section:not(.hero):not(.explore-benefits):not(.footer):not(.contact-details-sect
   border-color: var(--hero-text-color);
 }
 
-/* Intro Section */
+/* Intro Section & Shared Carousel Styles */
 .intro-content-wrapper {
     display: flex; flex-wrap: wrap; align-items: center;
     gap: clamp(30px, 5vw, 60px);
@@ -304,59 +298,96 @@ section:not(.hero):not(.explore-benefits):not(.footer):not(.contact-details-sect
 .intro-text-content h2 { text-align: left; margin-bottom: 1.5rem; }
 .intro-text-content p { font-size: clamp(1rem, 2.5vw, 1.15rem); line-height: 1.8; margin-bottom: 2rem;}
 .intro-cta { margin-top: 1rem; }
-.intro-carousel-wrapper {
-  flex: 1 1 50%; min-width: 320px; position: relative; overflow: hidden;
-  border-radius: var(--border-radius-md); box-shadow: var(--shadow-medium);
-  aspect-ratio: 16/10;
-}
-.intro-carousel { display: flex; transition: transform 0.7s ease-in-out; height:100%; }
-.intro-slide {
-  flex: 0 0 100%; display: none; align-items: center; justify-content: center;
-  opacity: 0; transform: scale(0.97);
-  transition: opacity 0.75s ease, transform 0.75s ease;
-  position: absolute; width: 100%; height: 100%; top:0; left:0;
-}
-.intro-slide.active { display: flex; opacity: 1; transform: scale(1); position: relative; }
-.intro-slide img { width: 100%; height: 100%; object-fit: cover; border-radius: var(--border-radius-md); }
 
-/* Carousel Arrows (Intro & Stacked Gallery) */
+.intro-carousel-wrapper, .stacked-gallery-container, .facility-slider-js-wrapper {
+  flex: 1 1 50%;
+  min-width: 300px;
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-medium);
+}
+.intro-carousel-wrapper { aspect-ratio: 16/10; }
+.stacked-gallery-container { aspect-ratio: 16/9.5; background: var(--bg-card); }
+.facility-slider-js-wrapper {
+    width: 100%;
+    max-width: 48%;
+    aspect-ratio: 4 / 3.2;
+}
+
+
+.facility-carousel, .intro-carousel, .stacked-gallery {
+    display: flex;
+    height: 100%;
+    position: relative;
+}
+.facility-slide-item, .intro-slide, .stacked-slide {
+    flex: 0 0 100%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: scale(0.97);
+    transition: opacity 1s ease, transform 1s ease; /* 1s transition time */
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+.facility-slide-item.active, .intro-slide.active, .stacked-slide.active {
+    display: flex;
+    opacity: 1;
+    transform: scale(1);
+    position: relative;
+}
+.facility-slide-item img, .intro-slide img, .stacked-slide img {
+    width: 100%;
+    height: 100%;
+    border-radius: var(--border-radius-md);
+}
+.intro-slide img, .stacked-slide img { object-fit: cover; }
+.facility-slide-item img { object-fit: contain; }
+
+
 .carousel-arrow {
   position: absolute; top: 50%;
   background-color: rgba(var(--text-primary-rgb), 0.45);
   color: var(--palette-blue-very-light); border: none; border-radius: 50%;
-  width: clamp(40px, 5vw, 48px);
-  height: clamp(40px, 5vw, 48px);
-  font-size: clamp(1.5rem, 3vw, 2rem);
-  cursor: pointer; z-index: 20 !important; /* Đảm bảo z-index cao */
+  width: clamp(38px, 4.5vw, 44px);
+  height: clamp(38px, 4.5vw, 44px);
+  font-size: clamp(1.4rem, 2.8vw, 1.8rem);
+  cursor: pointer; z-index: 25 !important;
   transition: background-color 0.3s, transform 0.2s ease;
   display: flex; align-items: center; justify-content: center;
   transform: translateY(-50%) scale(1);
+  padding: 0;
 }
 .carousel-arrow:hover {
     background-color: rgba(var(--text-primary-rgb), 0.65);
-    transform: translateY(-50%) scale(1.1);
+    transform: translateY(-50%) scale(1.08);
 }
-.intro-arrow.left, .stacked-arrow.left {
-    left: clamp(10px, 2vw, 20px);
-}
-.intro-arrow.right, .stacked-arrow.right {
-    right: clamp(10px, 2vw, 20px);
-}
+.carousel-arrow.left { left: clamp(8px, 1.5vw, 15px); }
+.carousel-arrow.right { right: clamp(8px, 1.5vw, 15px); }
 
 .carousel-dots {
-  position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
-  display: flex; gap: 10px; z-index: 10;
+  position: absolute; bottom: 15px;
+  left: 50%; transform: translateX(-50%);
+  display: flex; gap: 10px; z-index: 20;
 }
+.intro-carousel-wrapper .carousel-dots { bottom: 20px; }
+.stacked-gallery-container .carousel-dots { position: static; transform: none; justify-content: center; margin-top: 20px; }
+
 .carousel-dot {
-  width: 11px; height: 11px;
-  background-color: rgba(var(--text-primary-rgb), 0.3);
+  width: 10px; height: 10px;
+  background-color: rgba(var(--text-primary-rgb), 0.35);
   border-radius: 50%; cursor: pointer;
   transition: background-color 0.3s ease, transform 0.3s ease;
-  border: 1px solid rgba(var(--text-primary-rgb), 0.1);
+  border: 1px solid rgba(var(--text-primary-rgb), 0.15);
 }
 .carousel-dot.active {
   background-color: var(--accent-primary);
-  transform: scale(1.25);
+  transform: scale(1.2);
   border-color: var(--accent-primary-hover);
 }
 
@@ -376,68 +407,26 @@ section:not(.hero):not(.explore-benefits):not(.footer):not(.contact-details-sect
   box-shadow: var(--shadow-soft);
 }
 .facility-highlight.visible { opacity: 1; transform: translateY(0); }
-.facility-slider { width: 100%; max-width: 48%; aspect-ratio: 4 / 3.2; overflow: hidden; border-radius: var(--border-radius-md); position: relative; box-shadow: var(--shadow-soft); }
-/* Facility Scroll Section - UPDATED for JS Carousel */
-.facility-slider-js-wrapper { /* Wrapper mới cho JS carousel trong facility */
-  width: 100%;
-  max-width: 48%; /* Giữ nguyên từ .facility-slider cũ */
-  aspect-ratio: 4 / 3.2; /* Giữ nguyên từ .facility-slider cũ */
-  position: relative;
-  overflow: hidden;
-  border-radius: var(--border-radius-md);
-  box-shadow: var(--shadow-soft);
-}
-.facility-carousel { /* Class chung .intro-carousel được dùng trong HTML */
-  display: flex;
-  height: 100%;
-  /* transition: transform 0.7s ease-in-out; /* JS sẽ xử lý transition của slide */
-}
-.facility-slide-item { /* Class chung .intro-slide được dùng trong HTML */
-  flex: 0 0 100%;
-  display: none; /* JS sẽ đổi thành flex/block khi active */
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transform: scale(0.97);
-  transition: opacity 0.75s ease, transform 0.75s ease;
-  position: absolute; /* Để các slide chồng lên nhau */
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-}
-.facility-slide-item.active {
-  display: flex; /* Hoặc block, tùy vào nội dung */
-  opacity: 1;
-  transform: scale(1);
-  position: relative; /* Slide active sẽ là relative để chiếm không gian */
-}
-.facility-slide-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain; /* Yêu cầu: hiển thị đúng, không quá phóng to */
-  border-radius: var(--border-radius-md); /* Bo góc cho ảnh nếu cần */
-}
-
-/* Nút điều hướng và dots cho facility slider */
-.facility-slider-js-wrapper .carousel-arrow {
-  /* Style đã có, có thể cần điều chỉnh z-index nếu facility-content che mất */
-  z-index: 22; /* Đảm bảo cao hơn facility-content */
-}
-.facility-slider-js-wrapper .carousel-dots {
-  /* Style đã có, có thể cần điều chỉnh z-index */
-  z-index: 21;
-  bottom: 10px; /* Điều chỉnh vị trí dots cho facility slider */
-}
-
 
 .facility-content { flex: 1; padding-left: 0; min-width: 280px; position: relative; z-index: 2; }
+@media (min-width: 769px) {
+    .facility-highlight.facility-highlight-pool .facility-content,
+    .facility-highlight.facility-highlight-restaurant .facility-content,
+    .facility-highlight.facility-highlight-pickleball .facility-content {
+        padding-left: clamp(20px, 3vw, 30px);
+    }
+    .facility-highlight.facility-highlight-pool .facility-slider-js-wrapper,
+    .facility-highlight.facility-highlight-restaurant .facility-slider-js-wrapper,
+    .facility-highlight.facility-highlight-pickleball .facility-slider-js-wrapper {
+        margin-right: clamp(20px, 3vw, 30px);
+    }
+}
 .facility-content span { text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1.2px; opacity: 0.85; display: block; margin-bottom: 12px; font-weight: 700; color: var(--text-secondary); }
 .facility-content h3 { font-size: clamp(1.8rem, 4vw, 2.4rem); margin-bottom: 18px; color: var(--text-primary); }
 .facility-content p { font-size: clamp(0.95rem, 2.5vw, 1.05rem); margin-bottom: 30px; color: var(--text-secondary); }
 
 /* Room Section on index.html */
-.room-section .room-grid { /* Selector cụ thể hơn cho room-grid trên index.html */
+.room-section .room-grid {
   display: grid;
   gap: clamp(20px, 3vw, 30px);
   grid-template-columns: 1fr;
@@ -447,121 +436,130 @@ section:not(.hero):not(.explore-benefits):not(.footer):not(.contact-details-sect
     grid-template-columns: repeat(2, 1fr);
   }
 }
-/* Nếu có nhiều hơn 4 phòng và muốn giới hạn 2x2 trên desktop, có thể dùng:
-@media (min-width: 1024px) {
-  .room-section .room-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-*/
-.room-card-link-wrapper { /* Style cho thẻ a bọc room-card */
+a.room-card-link-wrapper {
     text-decoration: none;
     color: inherit;
-    display: block; /* Hoặc flex, grid tùy theo cách bạn muốn card hiển thị */
-    height: 100%; /* Để thẻ a chiếm toàn bộ chiều cao của grid cell */
+    display: block;
+    height: 100%;
 }
-.room-card { background: var(--bg-card); backdrop-filter: blur(8px); border-radius: var(--border-radius-md); overflow: hidden; box-shadow: var(--shadow-medium); text-align: left; transition: transform 0.35s ease, box-shadow 0.35s ease, background-color 0.35s ease; display: flex; flex-direction: column; height: 100%; /* Đảm bảo card chiếm full chiều cao của wrapper */ }
+.room-card { background: var(--bg-card); backdrop-filter: blur(8px); border-radius: var(--border-radius-md); overflow: hidden; box-shadow: var(--shadow-medium); text-align: left; transition: transform 0.35s ease, box-shadow 0.35s ease, background-color 0.35s ease; display: flex; flex-direction: column; height: 100%; }
 .room-card:hover { transform: translateY(-10px) scale(1.01); box-shadow: var(--shadow-strong); background: var(--bg-card-hover); }
 .room-image-wrapper { width: 100%; aspect-ratio: 16 / 10.5; overflow: hidden; }
 .room-image-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.45s ease; border-radius:0; }
 .room-card:hover .room-image-wrapper img { transform: scale(1.08); }
 .room-caption { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; }
 .room-caption h3 { font-size: clamp(1.3rem, 3.2vw, 1.6rem); color: var(--text-primary); margin-bottom: 15px;}
-.room-info { display: flex; gap: 18px; font-size: 0.95rem; color: var(--text-secondary); flex-wrap: wrap; align-items: center; margin-top: auto; /* Đẩy thông tin xuống nếu caption cao */ }
+.room-info { display: flex; gap: 18px; font-size: 0.95rem; color: var(--text-secondary); flex-wrap: wrap; align-items: center; margin-top: auto; }
 .room-info span { display: flex; align-items: center; gap: 8px; }
 .room-info svg { color: var(--palette-cyan-bright); }
 
-/* Stacked Gallery Section */
-.stacked-gallery-wrapper .stacked-title { margin-bottom: clamp(20px, 4vw, 30px); }
-.stacked-gallery-container { position: relative; border-radius: var(--border-radius-md); overflow: hidden; box-shadow: var(--shadow-medium); background: var(--bg-card); aspect-ratio: 16/9.5; }
-.stacked-gallery { display: flex; position: relative; height:100%;}
-.stacked-slide { flex: 0 0 100%; display: none; align-items: center; justify-content: center; opacity: 0; transform: scale(0.97); transition: opacity 0.75s ease, transform 0.75s ease; position: absolute; width: 100%; height: 100%; top:0; left:0; }
-.stacked-slide.active { display: flex; opacity: 1; transform: scale(1); position: relative; }
-.stacked-slide img { width: 100%; height: 100%; object-fit: cover; border-radius: var(--border-radius-md); }
-.carousel-dots.stacked-dots { margin-top: 20px; position: static; transform: none; justify-content: center;}
+/* Gallery Section ("Khám phá không gian thanh lịch") - UPDATED */
+.gallery-section .gallery-heading {
+  margin-bottom: clamp(20px, 4vw, 40px);
+}
+
+.gallery-grid {
+display: grid;
+grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); /* Hai cột bằng nhau */
+gap: clamp(15px, 2vw, 20px);
+max-width: 1100px;
+margin: 0 auto;
+/* align-items: stretch; /* Có thể không cần nếu cả hai tự vuông và bằng nhau */
+}
+
+.gallery-large {
+aspect-ratio: 1 / 1;
+border-radius: var(--border-radius-lg);
+overflow: hidden;
+box-shadow: var(--shadow-medium);
+display: flex;
+position: relative;
+}
+
+.gallery-large img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+transition: transform 0.45s ease;
+}
+.gallery-large img:hover { transform: scale(1.04); }
+
+.gallery-right-column {
+aspect-ratio: 1 / 1; /* Cột phải cũng hình vuông */
+display: grid;
+grid-template-columns: repeat(2, minmax(0, 1fr));
+grid-template-rows: repeat(2, minmax(0, 1fr));
+gap: clamp(15px, 2vw, 20px);
+/* border-radius: var(--border-radius-lg); /* Nếu muốn bo góc cả khối này */
+/* overflow: hidden; */
+}
+
+.gallery-small {
+aspect-ratio: 1 / 1;
+border-radius: var(--border-radius-md);
+overflow: hidden;
+box-shadow: var(--shadow-soft);
+display: flex;
+background-color: #eee;
+}
+
+.gallery-small img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+transition: transform 0.45s ease;
+}
+.gallery-small img:hover { transform: scale(1.06); }
 
 
-/* Director Quote Section */
+/* Director Quote Section - UPDATED Director Image */
 .director-quote-wrapper .stacked-title { margin-bottom: clamp(20px, 4vw, 30px); }
-.director-quote-content-area { display: flex; flex-wrap: wrap; align-items: center; gap: clamp(30px, 5vw, 50px); max-width: 950px; margin: 0 auto; background: var(--bg-card); backdrop-filter: blur(8px); padding: clamp(30px, 5vw, 50px); border-radius: var(--border-radius-md); box-shadow: var(--shadow-medium); }
-.director-image-container { flex: 0 0 200px; height: 200px; border-radius: 50%; overflow: hidden; box-shadow: 0 6px 20px rgba(78,215,241,0.25); border: 5px solid var(--palette-blue-very-light); }
-.director-image-container img { width: 100%; height: 100%; object-fit: cover; border-radius:0;}
-.quote-text-container { flex: 1; min-width: 320px; }
+.director-quote-content-area { display: flex; flex-wrap: wrap; gap: clamp(30px, 5vw, 50px); max-width: 950px; margin: 0 auto; background: var(--bg-card); backdrop-filter: blur(8px); padding: clamp(30px, 5vw, 50px); border-radius: var(--border-radius-md); box-shadow: var(--shadow-medium); }
+.director-image-container {
+  flex-shrink: 0;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(var(--text-primary-rgb),0.15);
+  border: 4px solid var(--palette-blue-very-light);
+  margin: 0 auto 15px auto;
+}
+@media (min-width: 768px) {
+    .director-quote-content-area {
+        align-items: center;
+    }
+    .director-image-container {
+        margin: 0;
+        flex: 0 0 100px;
+    }
+}
+.director-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.quote-text-container { flex: 1; min-width: 280px; }
 .quote-text { font-size: clamp(1.15rem, 2.8vw, 1.35rem); font-style: italic; margin-bottom: 20px; line-height: 1.75; color: var(--text-primary); position: relative; padding-left: 40px; }
 .quote-text::before { content: '“'; font-family: 'Playfair Display', serif; font-size: clamp(3rem, 6vw, 4rem); color: var(--accent-primary); position: absolute; left: 0px; top: -20px; opacity: 0.85; }
 .quote-author { font-size: clamp(1rem, 2.2vw, 1.1rem); font-weight: 700; color: var(--text-primary); text-align: right; margin-top: 15px; }
 
-/* Gallery Section */
-.gallery-section .gallery-heading { margin-bottom: clamp(20px, 4vw, 30px); }
-.gallery-grid {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: clamp(18px, 3.5vw, 25px);
-  align-items: stretch;
-  max-width: 1100px;
-  margin: 0 auto;
-}
-.gallery-large {
-  aspect-ratio: 1 / 1;
-  border-radius: var(--border-radius-lg);
-  overflow: hidden;
-  box-shadow: var(--shadow-medium);
-  display: flex;
-}
-.gallery-large img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.45s ease;
-}
-.gallery-large img:hover { transform: scale(1.04); }
-.gallery-right-column {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  gap: clamp(18px, 3.5vw, 25px);
-}
-.gallery-small {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  border-radius: var(--border-radius-md);
-  overflow: hidden;
-  box-shadow: var(--shadow-soft);
-  display: flex;
-}
-.gallery-small img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.45s ease;
-}
-.gallery-small img:hover { transform: scale(1.06); }
+/* ... CSS cho Explore Benefits, Booking Form, Contact Details, Footer, Responsive, rooms.html, gallery.html (giữ nguyên từ phiên bản trước) ... */
 
-/* Fallback for aspect-ratio for older browsers */
-.room-image-wrapper,
-.gallery-large,
-.gallery-small,
-.photo-item {
-  aspect-ratio: 1 / 1;
-}
-@supports not (aspect-ratio: 1 / 1) {
-  .room-image-wrapper,
-  .gallery-large,
-  .gallery-small,
-  .photo-item {
-    width: 100%;
-    height: 0;
-    padding-bottom: 100%;
-    position: relative;
-  }
-  .room-image-wrapper img,
-  .gallery-large img,
-  .gallery-small img,
-  .photo-item img {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
-  }
-}
+/* Các phần CSS cho rooms.html và gallery.html (đã cung cấp trước đó) cần được đặt ở đây */
+/* Ví dụ: */
+/* ============================================= */
+/* === CSS CHO TRANG ROOMS.HTML (TRANG PHÒNG) === */
+/* ============================================= */
+/* (Dán toàn bộ CSS cho rooms.html từ phản hồi trước vào đây) */
+
+
+/* ============================================= */
+/* === CSS CHO TRANG GALLERY.HTML (MỚI) === */
+/* ============================================= */
+/* (Dán toàn bộ CSS cho gallery.html từ phản hồi trước vào đây) */
+
+
 
 /* Explore Benefits Section */
 .explore-benefits {
@@ -874,13 +872,6 @@ footer {
   .facility-slider { max-width: 100%; }
   .facility-content { padding-left: 0; text-align: center; }
 
-  .gallery-grid {
-    grid-template-columns: 1fr;
-  }
-  .gallery-large {
-    aspect-ratio: 16 / 10;
-  }
-
   .benefits-grid { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
 }
 
@@ -915,6 +906,28 @@ footer {
   .director-image-container { margin: 0 auto; width: 130px; height: 130px; }
   .gallery-grid { gap: 15px; }
   .gallery-right-column { gap: 15px; }
+
+  @media (max-width: 1024px) { /* Tablets */
+    /* ... các style responsive hiện có ... */
+    .gallery-grid {
+      grid-template-columns: 1fr; /* Gallery stacks on tablet */
+    }
+    .gallery-large {
+      aspect-ratio: 16 / 10; /* Hoặc tỷ lệ khác phù hợp khi nó chiếm toàn bộ chiều rộng */
+    }
+    .gallery-right-column {
+      aspect-ratio: unset; /* Bỏ aspect-ratio khi xếp chồng, để chiều cao tự nhiên */
+      /* Các ảnh nhỏ bên trong vẫn sẽ là 1/1 và tự sắp xếp */
+    }
+  }
+  
+  @media (max-width: 768px) { /* Mobile */
+    /* ... các style responsive hiện có ... */
+     .gallery-large {
+      aspect-ratio: 4 / 3; /* Có thể muốn tỷ lệ khác cho mobile nhỏ hơn */
+    }
+    /* .gallery-right-column sẽ kế thừa từ tablet và hiển thị 2x2 nếu đủ rộng, hoặc tự điều chỉnh */
+  }
 
   /* Explore Benefits on Mobile */
   .benefit-item {
@@ -954,6 +967,38 @@ footer {
     .contact-detail-icon {
         margin-bottom: 10px;
     }
+}
+
+@media (max-width: 1024px) { /* Tablets */
+  /* ... */
+  .facility-slider-js-wrapper { /* Facility slider takes full width when stacked */
+    max-width: 100%;
+    margin-right: 0;
+  }
+  .facility-highlight { /* Adjust padding when stacked */
+     padding-left: clamp(25px, 4vw, 40px);
+     padding-right: clamp(25px, 4vw, 40px);
+  }
+  .facility-content {
+      padding-left: 0; /* Reset padding when stacked */
+  }
+  .gallery-grid {
+    grid-template-columns: 1fr; /* Gallery stacks */
+  }
+  .gallery-large {
+    aspect-ratio: 16 / 10; /* Give large image a more standard aspect ratio when stacked */
+    /* width: 100%; /* Ensure it takes full width when stacked */
+  }
+}
+
+@media (max-width: 768px) { /* Mobile */
+  /* ... */
+  .facility-slider-js-wrapper {
+      aspect-ratio: 16/10; /* Give it an aspect ratio on mobile */
+  }
+   .gallery-large {
+    aspect-ratio: 4 / 3; /* Or another ratio for mobile */
+  }
 }
 
 /* CSS CHO TRANG ROOMS.HTML (TRANG PHÒNG) */
@@ -1244,4 +1289,47 @@ footer {
   background-color: var(--btn-primary-hover-bg);
   color: var(--btn-primary-hover-text);
   transform: scale(1.03);
+}
+
+/* Responsive Adjustments - Cập nhật cho gallery và director quote */
+@media (max-width: 1024px) { /* Tablets */
+  /* ... các style hiện có ... */
+  .gallery-grid {
+    grid-template-columns: 1fr; /* Gallery stacks on tablet */
+  }
+  .gallery-large {
+    aspect-ratio: 16 / 10; /* Give large image aspect ratio when stacked */
+  }
+}
+
+@media (max-width: 768px) { /* Mobile */
+  /* ... các style hiện có ... */
+  .facility-slider-js-wrapper {
+      aspect-ratio: 16/10;
+  }
+   .gallery-large {
+    aspect-ratio: 4 / 3; /* Or another ratio for mobile */
+  }
+  .director-quote-content-area {
+      flex-direction: column;
+      text-align: center;
+  }
+  .director-image-container {
+      margin-bottom: 20px; /* Khoảng cách khi ảnh ở trên */
+  }
+  .quote-text-container {
+      min-width: 100%; /* Chiếm toàn bộ chiều rộng */
+  }
+  .quote-text {
+      padding-left: 0; /* Bỏ padding khi căn giữa */
+      text-align: center;
+  }
+  .quote-text::before {
+      left: 50%;
+      transform: translateX(-150%);
+      top: -15px;
+  }
+  .quote-author {
+      text-align: center;
+  }
 }
